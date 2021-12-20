@@ -1,0 +1,32 @@
+Resources:
+  ApplicationS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "parthyappbucket3"
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      LoggingConfiguration: {}
+      VersioningConfiguration:
+        Status: Enabled
+  ApplicationS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    DependsOn: ApplicationS3Bucket
+    Properties:
+      Bucket: !Ref ApplicationS3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Deny
+            Sid: AllowSSLRequestsOnly
+            Action: "s3:*"
+            Resource:
+              - arn:aws:s3:::parthyappbucket3
+              - arn:aws:s3:::parthyappbucket3/*
+            Condition:
+              Bool:
+                "aws:SecureTransport": "false"
+            Principal: "*"

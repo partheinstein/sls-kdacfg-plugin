@@ -1,0 +1,23 @@
+service: invoke-custom-plugin-svc
+
+plugins:
+  - serverless-s3-deploy
+  - ./KdaCfgPlugin.js
+custom:
+  assets:
+    auto: true
+    targets:
+      - bucket: !Ref ApplicationS3Bucket
+        empty: false
+        verbose: true
+        files:
+          - source: "."
+            globs: "*"
+
+#  applicationBucketName: "parthyappbucket"
+    
+provider:
+  name: aws
+
+resources:
+    - ${file(cfn.s3.yml)}
